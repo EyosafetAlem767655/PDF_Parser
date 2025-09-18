@@ -71,6 +71,31 @@ brew install ghostscript
    python pdf_parser.py --help
    ```
 
+## Getting Started (Quick Start)
+
+Follow these copy-paste commands to get the project running quickly.
+
+Windows PowerShell
+```powershell
+cd C:\Users\Eyosi\projects\jupyter-work
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+macOS / Linux
+```bash
+cd /path/to/your/project
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Notes:
+- On Windows ensure `python` is the same interpreter you used to create the virtualenv.
+- Install system dependencies (Ghostscript, OpenCV libs) before installing Camelot-related extras.
+
+
 ## Usage
 
 ### Basic Usage
@@ -121,6 +146,50 @@ try:
 finally:
     extractor.close()
 ```
+
+## Run The Parser (CLI)
+
+Basic usage (PowerShell / Linux / macOS):
+
+```powershell
+python pdf_parser.py "C:\path\to\document.pdf" output.json
+```
+
+With debug logging (prints detailed extraction steps):
+
+```powershell
+python pdf_parser.py document.pdf output.json --debug
+```
+
+Generate compact JSON (no indentation):
+
+```powershell
+python pdf_parser.py document.pdf output.json --compact
+```
+
+If the `input_pdf` path does not exist the script will open a file-picker dialog (GUI) so you can select a PDF interactively.
+
+## Running Tests and CI
+
+Run the included sample JSON test locally:
+
+```bash
+pip install pytest
+pytest -q
+```
+
+The test suite includes a small, self-contained test `test_create_sample_json` which creates `sample_output.json` and validates its structure — this does not require a real PDF and is safe to run in CI.
+
+Suggested GitHub Actions workflow (minimal):
+
+1. Create `.github/workflows/ci.yml` with steps to:
+   - Check out code
+   - Set up Python 3.9+
+   - Install `pip install -r requirements.txt`
+   - Run `pytest -q`
+
+This will ensure syntax and the sample test run on each push.
+
 
 ## JSON Output Structure
 
