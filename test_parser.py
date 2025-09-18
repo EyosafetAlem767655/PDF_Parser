@@ -96,7 +96,7 @@ def create_sample_json():
                     {
                         "type": "paragraph",
                         "section": "Conclusion",
-                        "sub_section": null,
+                        "sub_section": None,
                         "text": "This concluding paragraph demonstrates how the parser maintains section context across pages."
                     },
                     {
