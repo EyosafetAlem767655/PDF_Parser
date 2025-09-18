@@ -9,11 +9,13 @@ and provides basic testing functionality.
 
 import json
 import sys
+import os
 from pathlib import Path
 from pdf_parser import PDFContentExtractor
+import pytest
 
 
-def test_extraction(pdf_path: str, output_path: str = None):
+def run_extraction(pdf_path: str, output_path: str = None):
     """
     Test PDF extraction with a given file.
 
@@ -143,7 +145,7 @@ def main():
     pdf_file = sys.argv[1]
     output_file = sys.argv[2] if len(sys.argv) > 2 else None
 
-    success = test_extraction(pdf_file, output_file)
+    success = run_extraction(pdf_file, output_file)
     if success:
         print("\n✅ Test completed successfully!")
     else:
@@ -153,3 +155,19 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def test_create_sample_json(tmp_path):
+    """Pytest test: generate the sample JSON and assert its structure."""
+    cwd = Path.cwd()
+    try:
+        # run inside temporary directory so CI stays clean
+        os.chdir(tmp_path)
+        create_sample_json()
+        out = tmp_path / 'sample_output.json'
+        assert out.exists(), "sample_output.json was not created"
+        data = json.loads(out.read_text(encoding='utf-8'))
+        assert 'document_info' in data and 'pages' in data
+        assert isinstance(data['pages'], list)
+    finally:
+        os.chdir(cwd)
